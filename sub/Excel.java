@@ -7,18 +7,38 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 public class Excel{
 
     private String name;
     private int sheetNumber;
-    private String linkToRead;
-    private String linkToWrite;
+    /*private String linkToRead;
+    private String linkToWrite;*/
 
     public Excel(){
         this.name = "Гирман";
         this.sheetNumber = 2;
+    }
+
+    private int getRowsNumber(XSSFSheet sheet){
+        return sheet.getLastRowNum();
+    }
+
+    private int getColumnsNumber(XSSFSheet sheet){
+        int columnsNumber = 0;
+        Iterator<?> rows = sheet.rowIterator();
+        while(rows.hasNext()){
+            XSSFRow row = (XSSFRow) rows.next();
+            Iterator<?> cells = row.cellIterator();
+            while(cells.hasNext()){
+                columnsNumber++;
+                cells.next();
+            }
+            break;
+        }
+        return columnsNumber;
     }
 
     public ArrayList<double[]> readExcel(String linkToRead){
@@ -30,22 +50,18 @@ public class Excel{
             e.printStackTrace();
         }
         XSSFSheet sheet = workbook.getSheetAt(sheetNumber-1);
-        int rowsNumber = sheet.getLastRowNum();
 
-        double arrX[] = new double[rowsNumber];
-        double arrY[] = new double[rowsNumber];
-        double arrZ[] = new double[rowsNumber];
-
-        for(int i=0; i<rowsNumber; i++){
-            arrX[i] = sheet.getRow(i+1).getCell(0).getNumericCellValue();
-            arrY[i] = sheet.getRow(i+1).getCell(1).getNumericCellValue();
-            arrZ[i] = sheet.getRow(i+1).getCell(2).getNumericCellValue();
-        }
+        int rowsNumber = getRowsNumber(sheet);
+        int columnsNumber = getColumnsNumber(sheet);
 
         ArrayList<double[]> arrayList = new ArrayList<double[]>();
-        arrayList.add(arrX);
-        arrayList.add(arrY);
-        arrayList.add(arrZ);
+        for(int j=0; j<columnsNumber; j++){
+            double arr[] = new double[rowsNumber];
+            for(int i=0; i<rowsNumber; i++){
+                arr[i] = sheet.getRow(i+1).getCell(j).getNumericCellValue();
+            }
+            arrayList.add(arr);
+        }
 
         try {
             workbook.close();

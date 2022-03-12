@@ -13,7 +13,7 @@ public class Calc{
     private Double standardDeviation;
     private Double sampleRange;
     private Double covariance;
-    private Double lenght;
+    private Double length;
     private Double koefVariance;
     private Double intervalLow;
     private Double intervalHigh;
@@ -22,12 +22,16 @@ public class Calc{
     private Double max;
 
     public Calc(double arr1[], double arr2[]){
+        fillCalc(arr1, arr2);
+    }
+
+    private void fillCalc(double arr1[], double arr2[]){
         this.geometricMean = StatUtils.geometricMean(arr1);
         this.mean = StatUtils.mean(arr1);
         this.standardDeviation = Math.sqrt(StatUtils.variance(arr1));
         this.sampleRange = (StatUtils.max(arr1) - StatUtils.min(arr1));
         this.covariance = new Covariance().covariance(arr1,arr2);
-        this.lenght = Double.valueOf(arr1.length);
+        this.length = Double.valueOf(arr1.length);
         this.koefVariance = (Math.sqrt(StatUtils.variance(arr1))/Math.abs(StatUtils.mean(arr1)));
         this.intervalLow = (StatUtils.mean(arr1)-(new TDistribution(arr1.length-1).inverseCumulativeProbability(0.95)*Math.sqrt(StatUtils.variance(arr1))))/Math.sqrt(arr1.length);
         this.intervalHigh = (StatUtils.mean(arr1)+(new TDistribution(arr1.length-1).inverseCumulativeProbability(0.95)*Math.sqrt(StatUtils.variance(arr1))))/Math.sqrt(arr1.length);
@@ -43,7 +47,7 @@ public class Calc{
         hashMap.put("Стандартное отклонение", this.standardDeviation);
         hashMap.put("Размах выборки", this.sampleRange);
         hashMap.put("Коэффициент ковариации", this.covariance);
-        hashMap.put("Количество элементов", this.lenght);
+        hashMap.put("Количество элементов", this.length);
         hashMap.put("Коэффициент вариации", this.koefVariance);
         hashMap.put("Доверительный интервал (нижний)", this.intervalLow);
         hashMap.put("Доверительный интервал (верхний)", this.intervalHigh);
