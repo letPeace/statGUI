@@ -78,7 +78,12 @@ public class Excel{
         XSSFWorkbook workbookOut = new XSSFWorkbook();
         XSSFSheet sheetOut = workbookOut.createSheet(name);
 
-        int i = 0;
+        XSSFRow header = sheetOut.createRow(0);
+        header.createCell(0).setCellValue("");
+        header.createCell(1).setCellValue("X");
+        header.createCell(2).setCellValue("Y");
+        header.createCell(3).setCellValue("Z");
+        int i = 1;
         for(String st : mapList.get(0).keySet()){
             XSSFRow rw = sheetOut.createRow(i);
             rw.createCell(0).setCellValue(st);
